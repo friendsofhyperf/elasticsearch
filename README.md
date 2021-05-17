@@ -10,6 +10,11 @@ A component for elasticsearch
 
 ```bash
 composer require friendsofhyperf/elasticsearch
+```
+
+## Publish configure
+
+```bash
 php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 ```
 
