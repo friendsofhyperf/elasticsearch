@@ -24,7 +24,7 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 
 ```php
 <?php
-namespace App\Model\Elasticsearch;
+namespace App\Elasticsearch;
 
 use FriendsOfHyperf\Elasticsearch\Model;
 
@@ -37,7 +37,7 @@ class Test extends Model
 - Query
 
 ```php
-use App\Model\Elasticsearch\Test;
+use App\Elasticsearch\Test;
 
 Test::query()->where(...)->search();
 ```
@@ -45,7 +45,7 @@ Test::query()->where(...)->search();
 - UpdateByQuery
 
 ```php
-use App\Model\Elasticsearch\Test;
+use App\Elasticsearch\Test;
 
 Test::query()->where(...)->script(['source' => 'ctx.source.xxx = value'])->updateByQuery();
 ```
