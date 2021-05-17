@@ -46,7 +46,12 @@ class Model
     public function __call(string $name, array $arguments)
     {
         if (is_callable([$this->query, $name])) {
-            $this->query->{$name}(...$arguments);
+            $result = $this->query->{$name}(...$arguments);
+
+            if (! ($result instanceof Builder)) {
+                return $result;
+            }
+
             return $this;
         }
 
