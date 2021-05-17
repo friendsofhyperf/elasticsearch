@@ -49,3 +49,11 @@ use App\Elasticsearch\Test;
 
 Test::query()->where(...)->script(['source' => 'ctx.source.xxx = value'])->updateByQuery();
 ```
+
+- Count
+
+```php
+use App\Elasticsearch\Test;
+
+Test::query()->where(...)->count();
+```
