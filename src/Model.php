@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch;
 
+use Elasticsearch\Client;
 use FriendsOfHyperf\Elasticsearch\Query\Builder;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Elasticsearch\ClientBuilderFactory;
