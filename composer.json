@@ -23,6 +23,11 @@
             "FriendsOfHyperf\\Elasticsearch\\": "src/"
         }
     },
+    "extra": {
+        "hyperf": {
+            "config": "FriendsOfHyperf\\Elasticsearch\\ConfigProvider"
+        }
+    },
     "scripts": {
         "cs-fix": "php-cs-fixer fix $1",
         "analyse": "phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./src"
