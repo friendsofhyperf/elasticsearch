@@ -56,7 +56,13 @@ class Model
         }
 
         if (is_callable([$this->client, $name])) {
-            return $this->client->{$name}($this->query->compileSearch());
+            $params = $this->query->compileSearch();
+
+            if ($name == 'count') {
+                unset($params['_source']);
+            }
+
+            return $this->client->{$name}($params);
         }
     }
 
