@@ -29,6 +29,11 @@ class Model
     protected $index;
 
     /**
+     * @var string
+     */
+    protected $type = '_doc';
+
+    /**
      * @var array
      */
     protected $hosts;
@@ -56,7 +61,11 @@ class Model
         }
 
         if (is_callable([$this->client, $name])) {
-            $params = $this->query->compileSearch();
+            if (isset($arguments[0]) && is_array($arguments[0])) {
+                $params = $arguments[0];
+            } else {
+                $params = $this->query->compileSearch();
+            }
 
             if ($name == 'count') {
                 unset($params['_source']);
