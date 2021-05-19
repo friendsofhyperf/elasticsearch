@@ -12,6 +12,9 @@ namespace FriendsOfHyperf\Elasticsearch;
 
 use FriendsOfHyperf\Elasticsearch\Model\AbstractModel;
 
+/**
+ * @deprecated
+ */
 class Model extends AbstractModel
 {
 }

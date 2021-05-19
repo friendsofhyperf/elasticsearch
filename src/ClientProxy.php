@@ -25,9 +25,4 @@ class ClientProxy extends Client
         $this->poolName = $pool;
         parent::__construct($factory, $config);
     }
-
-    // public function __call($name, $arguments)
-    // {
-    //     return parent::__call($name, $arguments);
-    // }
 }
