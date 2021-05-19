@@ -26,9 +26,9 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 <?php
 namespace App\Elasticsearch;
 
-use FriendsOfHyperf\Elasticsearch\Model;
+use FriendsOfHyperf\Elasticsearch\Model\AbstractModel;
 
-class Test extends Model
+class Test extends AbstractModel
 {
     protected $index = 'test';
 }
