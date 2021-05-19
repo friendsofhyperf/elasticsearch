@@ -10,8 +10,8 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch\Model;
 
-use Elasticsearch\Client;
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
+use FriendsOfHyperf\Elasticsearch\ClientProxy;
 use FriendsOfHyperf\Elasticsearch\Query\Builder;
 use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerInterface;
@@ -38,7 +38,7 @@ abstract class AbstractModel
     protected $pool = 'default';
 
     /**
-     * @var Client
+     * @var ClientProxy
      */
     private $client;
 
