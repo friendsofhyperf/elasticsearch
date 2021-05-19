@@ -57,3 +57,16 @@ use App\Elasticsearch\Test;
 
 Test::query()->where(...)->count();
 ```
+
+- Client Proxy
+
+```php
+namespace App\Proxy;
+
+use FriendsOfHyperf\Elasticsearch\ClientProxy;
+
+class FooClient extends ClientProxy
+{
+    protected $poolName = 'foo';
+}
+```
