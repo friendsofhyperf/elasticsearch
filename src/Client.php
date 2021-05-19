@@ -19,6 +19,9 @@ use Hyperf\Elasticsearch\ClientBuilderFactory;
 use Hyperf\Guzzle\RingPHP\PoolHandler;
 use Hyperf\Utils\Coroutine;
 
+/**
+ * @mixin \Elasticsearch\Client
+ */
 class Client
 {
     /**
