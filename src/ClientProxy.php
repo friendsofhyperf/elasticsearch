@@ -22,8 +22,8 @@ class ClientProxy extends Client
 
     public function __construct(ClientBuilderFactory $factory, ConfigInterface $config, string $pool)
     {
-        parent::__construct($factory, $config);
         $this->poolName = $pool;
+        parent::__construct($factory, $config);
     }
 
     // public function __call($name, $arguments)
