@@ -8,13 +8,10 @@ declare(strict_types=1);
  * @document https://github.com/friendsofhyperf/elasticsearch/blob/main/README.md
  * @contact  hdj@addcn.com
  */
-return [
-    'default' => [
-        'hosts' => [
-            'http://127.0.0.1:9500',
-        ],
-        'pool' => [
-            'max_connections' => 64,
-        ],
-    ],
-];
+namespace FriendsOfHyperf\Elasticsearch\Exception;
+
+use RuntimeException;
+
+class InvalidClientProxyException extends RuntimeException
+{
+}
