@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace FriendsOfHyperf\Elasticsearch;
 
 use Closure;
-use Elasticsearch\Client as ElasticsearchClient;
 use Elasticsearch\ClientBuilder;
+use FriendsOfHyperf\Elasticsearch\Exception\MissingConfigException;
 use FriendsOfHyperf\Elasticsearch\Query\Builder;
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Elasticsearch\ClientBuilderFactory;
+use Hyperf\Guzzle\RingPHP\CoroutineHandler;
 use Hyperf\Guzzle\RingPHP\PoolHandler;
 use Hyperf\Utils\Coroutine;
 
@@ -30,27 +30,35 @@ class Client
     protected $poolName = 'default';
 
     /**
-     * @var ElasticsearchClient
+     * @var \Elasticsearch\Client
      */
     protected $client;
 
-    public function __construct(ClientBuilderFactory $factory, ConfigInterface $config)
+    public function __construct(ConfigInterface $config)
     {
-        /** @var array */
-        $poolConfig = $config->get('elasticsearch.' . $this->poolName);
-        $hosts = data_get($poolConfig, 'hosts', []);
-        /** @var ClientBuilder $builder */
-        $builder = $factory->create();
+        if (! $config->has($configKey = 'elasticsearch.' . $this->poolName)) {
+            throw new MissingConfigException('Config item ' . $configKey . ' is missing.');
+        }
 
-        if ($maxConnections = data_get($poolConfig, 'pool.max_connections') > 0) {
-            if (Coroutine::inCoroutine()) {
+        /** @var array */
+        $poolConfig = $config->get($configKey);
+        $hosts = data_get($poolConfig, 'hosts', []);
+        $builder = ClientBuilder::create();
+
+        if (Coroutine::inCoroutine()) {
+            $maxConnections = (int) data_get($poolConfig, 'pool.max_connections');
+
+            if ($maxConnections > 0) {
                 $handler = make(PoolHandler::class, [
                     'option' => [
                         'max_connections' => (int) $maxConnections,
                     ],
                 ]);
-                $builder->setHandler($handler);
+            } else {
+                $handler = new CoroutineHandler();
             }
+
+            $builder->setHandler($handler);
         }
 
         $this->client = $builder->setHosts($hosts)->build();

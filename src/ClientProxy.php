@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace FriendsOfHyperf\Elasticsearch;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Elasticsearch\ClientBuilderFactory;
 
 class ClientProxy extends Client
 {
@@ -20,9 +19,9 @@ class ClientProxy extends Client
      */
     protected $poolName;
 
-    public function __construct(ClientBuilderFactory $factory, ConfigInterface $config, string $pool)
+    public function __construct(ConfigInterface $config, string $pool)
     {
         $this->poolName = $pool;
-        parent::__construct($factory, $config);
+        parent::__construct($config);
     }
 }
