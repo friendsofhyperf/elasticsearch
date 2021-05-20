@@ -9,6 +9,7 @@
         "email": "huangdijia@gmail.com"
     }],
     "require": {
+        "php": ">= 7.3",
         "elasticsearch/elasticsearch": "^7.12",
         "hyperf/guzzle": "^2.0"
     },
