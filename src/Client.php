@@ -30,9 +30,9 @@ class Client
     protected $poolName = 'default';
 
     /**
-     * @var \Elasticsearch\Client
+     * @var \Elasticsearch\ClientBuilder
      */
-    protected $client;
+    protected $clientBuilder;
 
     public function __construct(ConfigInterface $config)
     {
@@ -61,7 +61,7 @@ class Client
             $builder->setHandler($handler);
         }
 
-        $this->client = $builder->setHosts($hosts)->build();
+        $this->clientBuilder = $builder->setHosts($hosts);
     }
 
     public function __call($name, $arguments)
@@ -76,6 +76,6 @@ class Client
             }
         }
 
-        return $this->client->{$name}(...$arguments);
+        return $this->clientBuilder->build()->{$name}(...$arguments);
     }
 }
