@@ -58,7 +58,7 @@ class MigrateCommand extends HyperfCommand
         }
 
         /** @var MigrateAble $model */
-        $model = new $modelClass();
+        $model = make($modelClass);
 
         if (! ($model instanceof MigrateAble)) {
             $this->output->error($modelClass . ' must be implement by ' . MigrateAble::class);
