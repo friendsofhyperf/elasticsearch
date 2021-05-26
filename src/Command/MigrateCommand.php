@@ -13,7 +13,7 @@ namespace FriendsOfHyperf\Elasticsearch\Command;
 use Closure;
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
-use FriendsOfHyperf\Elasticsearch\Model\Contract\MigrateAble;
+use FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Psr\Container\ContainerInterface;
@@ -29,7 +29,7 @@ class MigrateCommand extends HyperfCommand
      */
     protected $container;
 
-    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index}';
+    protected $signature = 'elasticsearch:migrate {index : Index} {--update : Update a existed index} {--recreate : Create index}';
 
     /**
      * @var ClientProxy
@@ -45,32 +45,32 @@ class MigrateCommand extends HyperfCommand
     public function configure()
     {
         parent::configure();
-        $this->setDescription('Build index by model.');
+        $this->setDescription('Build index.');
     }
 
     public function handle()
     {
-        $modelClass = $this->input->getArgument('model');
+        $indexClass = $this->input->getArgument('index');
 
-        if (! class_exists($modelClass)) {
-            $this->output->error($modelClass . ' not exists!');
+        if (! class_exists($indexClass)) {
+            $this->output->error($indexClass . ' not exists!');
             return;
         }
 
-        /** @var MigrateAble $model */
-        $model = make($modelClass);
+        /** @var MigrateAble $instance */
+        $instance = make($indexClass);
 
-        if (! ($model instanceof MigrateAble)) {
-            $this->output->error($modelClass . ' must be implement by ' . MigrateAble::class);
+        if (! ($instance instanceof MigrateAble)) {
+            $this->output->error($indexClass . ' must be implement by ' . MigrateAble::class);
             return;
         }
 
-        $pool = $model->getPool();
-        $index = $model->getIndex();
-        $type = $model->getType();
-        $settings = $model->getSettings();
-        $properties = $model->getProperties();
-        $migration = $model->getMigration();
+        $pool = $instance->getPool();
+        $index = $instance->getIndex();
+        $type = $instance->getType();
+        $settings = $instance->getSettings();
+        $properties = $instance->getProperties();
+        $migration = $instance->getMigration();
 
         $this->client = $this->container->get(ClientFactory::class)->get($pool);
 

@@ -20,15 +20,17 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 
 ## Usage
 
-- Create a Model
+### Index
+
+- Create a Index
 
 ```php
 <?php
 namespace App\Indices;
 
-use FriendsOfHyperf\Elasticsearch\Model\AbstractModel;
+use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
 
-class Test extends AbstractModel
+class Test extends AbstractIndex
 {
     protected $index = 'test';
 }
@@ -58,7 +60,7 @@ use App\Indices\Test;
 Test::query()->where(...)->count();
 ```
 
-- Client Proxy
+### ClientProxy
 
 ```php
 namespace App\Proxy;

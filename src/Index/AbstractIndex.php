@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/friendsofhyperf/elasticsearch/blob/main/README.md
  * @contact  hdj@addcn.com
  */
-namespace FriendsOfHyperf\Elasticsearch\Model;
+namespace FriendsOfHyperf\Elasticsearch\Index;
 
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
@@ -19,9 +19,8 @@ use Psr\Container\ContainerInterface;
 /**
  * @mixin \FriendsOfHyperf\Elasticsearch\Query\Builder
  * @mixin \Elasticsearch\Client
- * @deprecated
  */
-abstract class AbstractModel
+abstract class AbstractIndex
 {
     /**
      * @var string
