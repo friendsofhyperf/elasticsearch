@@ -17,8 +17,9 @@ use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerInterface;
 
 /**
- * @mixin \FriendsOfHyperf\Elasticsearch\Query\Builder
  * @mixin \Elasticsearch\Client
+ * @mixin \FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble
+ * @mixin \FriendsOfHyperf\Elasticsearch\Query\Builder
  */
 abstract class AbstractIndex
 {
