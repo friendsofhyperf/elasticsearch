@@ -245,10 +245,10 @@ class GeneratorCommand extends BasCommand
      */
     protected function replacePool(&$stub)
     {
-        if ($this->getPoolInput()) {
+        if ($pool = $this->getPoolInput()) {
             $stub = str_replace(
                 ['%POOL%'],
-                [$this->getPoolInput()],
+                [$pool],
                 $stub
             );
         } else {
