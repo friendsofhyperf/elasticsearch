@@ -35,6 +35,12 @@ class Test extends AbstractIndex
 }
 ```
 
+- Make
+
+```bash
+php bin/hyperf.php gen:index test
+```
+
 - Query
 
 ```php
