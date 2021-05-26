@@ -12,16 +12,6 @@ namespace FriendsOfHyperf\Elasticsearch\Model\Traits;
 
 trait Migrate
 {
-    /**
-     * @var array
-     */
-    protected $settings = [];
-
-    /**
-     * @var array
-     */
-    protected $properties = [];
-
     public function getPool(): string
     {
         return $this->pool;
@@ -39,11 +29,11 @@ trait Migrate
 
     public function getSettings(): array
     {
-        return $this->settings;
+        return $this->settings ?? [];
     }
 
     public function getProperties(): array
     {
-        return $this->properties;
+        return $this->properties ?? [];
     }
 }
