@@ -115,8 +115,11 @@ class MigrateCommand extends HyperfCommand
             // $this->client->indices()->close(['index' => $index]);
             // $this->output->warning('Index ' . $index . ' closed.');
 
-            $info = $this->client->indices()->getAlias(['index' => $index]);
-            $old = array_keys($info)[0];
+            if ($this->client->indices()->exists(['index' => $index])) {
+                $info = $this->client->indices()->getAlias(['index' => $index]);
+                $old = array_keys($info)[0];
+            }
+
             $new = $this->getNewIndexName($index);
 
             $this->client->indices()->create([
@@ -131,8 +134,10 @@ class MigrateCommand extends HyperfCommand
             $this->client->indices()->putAlias(['index' => $new, 'name' => $index]);
             $this->output->info('Index ' . $index . ' alias to ' . $index . '.');
 
-            $this->client->indices()->delete(['index' => $old]);
-            $this->output->warning('Index ' . $old . ' deleted.');
+            if (isset($old)) {
+                $this->client->indices()->delete(['index' => $old]);
+                $this->output->warning('Index ' . $old . ' deleted.');
+            }
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         }
