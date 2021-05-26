@@ -92,26 +92,28 @@ class MigrateCommand extends HyperfCommand
             $this->update($index, $type, $settings, $properties);
             return;
         }
-
-        $this->output->info('Done!');
     }
 
     protected function create(string $index, string $type, array $settings, array $properties)
     {
         if ($this->client->indices()->exists(['index' => $index])) {
-            $this->output->warning($index . ' exists.');
+            $this->output->warning('Index ' . $index . ' exists.');
             return;
         }
 
         try {
+            $indexName = $index . '_0';
+
             $this->client->indices()->create([
-                'index' => $index . '_0',
+                'index' => $indexName,
                 'body' => [
                     'settings' => $settings,
                     'mappings' => [$type => $properties],
                     'aliases' => [$index => new \stdClass()],
                 ],
             ]);
+
+            $this->output->info('Index ' . $indexName . ' created.');
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         }
@@ -120,7 +122,8 @@ class MigrateCommand extends HyperfCommand
     protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [])
     {
         try {
-            $this->client->indices()->close(['index' => $index]);
+            // $this->client->indices()->close(['index' => $index]);
+            // $this->output->warning('Index ' . $index . ' closed.');
 
             $info = $this->client->indices()->getAlias(['index' => $index]);
             $old = array_keys($info)[0];
@@ -133,10 +136,13 @@ class MigrateCommand extends HyperfCommand
                     'mappings' => [$type => $properties],
                 ],
             ]);
+            $this->output->info('Index ' . $new . ' created.');
 
             $this->client->indices()->putAlias(['index' => $new, 'name' => $index]);
+            $this->output->info('Index ' . $index . ' alias to ' . $index . '.');
 
             $this->client->indices()->delete(['index' => $old]);
+            $this->output->warning('Index ' . $old . ' deleted.');
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         }
@@ -151,21 +157,25 @@ class MigrateCommand extends HyperfCommand
 
         try {
             $this->client->indices()->close(['index' => $index]);
+            $this->output->warning('Index ' . $index . ' closed.');
 
             $this->client->indices()->putSettings([
                 'index' => $index,
                 'body' => $settings,
             ]);
+            $this->output->warning('Index ' . $index . ' settings updated.');
 
             $this->client->indices()->putMapping([
                 'index' => $index,
                 'type' => $type,
                 'body' => [$type => $properties],
             ]);
+            $this->output->warning('Index ' . $index . ' mappings updated.');
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         } finally {
             $this->client->indices()->open(['index' => $index]);
+            $this->output->warning('Index ' . $index . ' opened.');
         }
     }
 
