@@ -285,8 +285,8 @@ class GeneratorCommand extends BasCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Whether force to rewrite.'],
             ['namespace', 'N', InputOption::VALUE_OPTIONAL, 'The namespace for class.', null],
-            ['pool', '', InputOption::VALUE_REQUIRED, 'The pool for index.', 'default'],
-            ['prefix', 'P', InputOption::VALUE_REQUIRED, 'The prefix for index.', null],
+            ['pool', '', InputOption::VALUE_OPTIONAL, 'The pool for index.', 'default'],
+            ['prefix', 'P', InputOption::VALUE_OPTIONAL, 'The prefix for index.', null],
         ];
     }
 
