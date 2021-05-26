@@ -33,16 +33,6 @@ abstract class AbstractModel
     protected $type = '_doc';
 
     /**
-     * @var array
-     */
-    protected $settings = [];
-
-    /**
-     * @var array
-     */
-    protected $mappings = [];
-
-    /**
      * @var string
      */
     protected $pool = 'default';
@@ -50,12 +40,12 @@ abstract class AbstractModel
     /**
      * @var ClientProxy
      */
-    private $client;
+    protected $client;
 
     /**
      * @var Builder
      */
-    private $query;
+    protected $query;
 
     public function __call(string $name, array $arguments)
     {
@@ -82,31 +72,6 @@ abstract class AbstractModel
 
             return $this->client->{$name}($params);
         }
-    }
-
-    public static function query(): self
-    {
-        return (new static())->newQuery();
-    }
-
-    public static function getIndex(): string
-    {
-        return (new static())->index;
-    }
-
-    public static function getType(): string
-    {
-        return (new static())->type;
-    }
-
-    public static function getSettings(): array
-    {
-        return (new static())->settings ?? [];
-    }
-
-    public static function getMappings(): array
-    {
-        return (new static())->mappings ?? [];
     }
 
     public function newQuery(): self
