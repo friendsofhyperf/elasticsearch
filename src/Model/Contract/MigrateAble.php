@@ -10,6 +10,8 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch\Model\Contract;
 
+use Closure;
+
 interface MigrateAble
 {
     public function getPool(): string;
@@ -21,4 +23,6 @@ interface MigrateAble
     public function getSettings(): array;
 
     public function getProperties(): array;
+
+    public function getMigration(): ?Closure;
 }

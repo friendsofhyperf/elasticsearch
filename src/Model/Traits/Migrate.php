@@ -10,6 +10,8 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch\Model\Traits;
 
+use Closure;
+
 trait Migrate
 {
     public function getPool(): string
@@ -35,5 +37,10 @@ trait Migrate
     public function getProperties(): array
     {
         return $this->properties ?? [];
+    }
+
+    public function getMigration(): ?Closure
+    {
+        return function ($index) {};
     }
 }

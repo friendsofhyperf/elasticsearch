@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch\Command;
 
+use Closure;
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
 use FriendsOfHyperf\Elasticsearch\Model\Contract\MigrateAble;
@@ -28,7 +29,7 @@ class MigrateCommand extends HyperfCommand
      */
     protected $container;
 
-    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index}';
+    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index} {--seed : Rebuild data}';
 
     /**
      * @var ClientProxy
@@ -69,22 +70,23 @@ class MigrateCommand extends HyperfCommand
         $type = $model->getType();
         $settings = $model->getSettings();
         $properties = $model->getProperties();
+        $migration = $model->getMigration();
 
         $this->client = $this->container->get(ClientFactory::class)->get($pool);
 
         if ($this->input->getOption('recreate')) {
-            $this->recreate($index, $type, $settings, $properties);
+            $this->recreate($index, $type, $settings, $properties, $migration);
             return;
         }
         if ($this->input->getOption('update')) {
-            $this->update($index, $type, $settings, $properties);
+            $this->update($index, $type, $settings, $properties, $migration);
             return;
         }
 
-        $this->create($index, $type, $settings, $properties);
+        $this->create($index, $type, $settings, $properties, $migration);
     }
 
-    protected function create(string $index, string $type, array $settings, array $properties)
+    protected function create(string $index, string $type, array $settings, array $properties, ?Closure $migration)
     {
         if ($this->client->indices()->exists(['index' => $index])) {
             $this->output->warning('Index ' . $index . ' exists.');
@@ -92,10 +94,10 @@ class MigrateCommand extends HyperfCommand
         }
 
         try {
-            $indexName = $index . '_0';
+            $new = $index . '_0';
 
             $this->client->indices()->create([
-                'index' => $indexName,
+                'index' => $new,
                 'body' => [
                     'settings' => $settings,
                     'mappings' => [$type => ['properties' => $properties]],
@@ -103,13 +105,19 @@ class MigrateCommand extends HyperfCommand
                 ],
             ]);
 
-            $this->output->info('Index ' . $indexName . ' created.');
+            $this->output->info('Index ' . $new . ' created.');
+
+            if ($migration) {
+                $this->output->info('Data loading.');
+                $migration($new);
+                $this->output->info('Data loaded.');
+            }
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         }
     }
 
-    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [])
+    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
     {
         try {
             // $this->client->indices()->close(['index' => $index]);
@@ -131,6 +139,12 @@ class MigrateCommand extends HyperfCommand
             ]);
             $this->output->info('Index ' . $new . ' created.');
 
+            if ($migration) {
+                $this->output->info('Data loading.');
+                $migration($new);
+                $this->output->info('Data loaded.');
+            }
+
             $this->client->indices()->putAlias(['index' => $new, 'name' => $index]);
             $this->output->info('Index ' . $new . ' alias to ' . $index . '.');
 
@@ -143,7 +157,7 @@ class MigrateCommand extends HyperfCommand
         }
     }
 
-    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [])
+    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
     {
         if (! $this->client->indices()->exists(['index' => $index])) {
             $this->output->warning($index . ' not exists.');
