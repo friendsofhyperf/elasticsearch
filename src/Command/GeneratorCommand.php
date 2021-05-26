@@ -252,8 +252,8 @@ class GeneratorCommand extends BasCommand
                 $stub
             );
         } else {
-            $stub = str_replace(
-                "protected \$pool = '%POOL%';\n",
+            $stub = preg_replace(
+                "/\n.*'%POOL%';/",
                 '',
                 $stub
             );
