@@ -24,7 +24,7 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 
 ```php
 <?php
-namespace App\Elasticsearch;
+namespace App\Indices;
 
 use FriendsOfHyperf\Elasticsearch\Model\AbstractModel;
 
@@ -37,7 +37,7 @@ class Test extends AbstractModel
 - Query
 
 ```php
-use App\Elasticsearch\Test;
+use App\Indices\Test;
 
 Test::query()->where(...)->search();
 ```
@@ -45,7 +45,7 @@ Test::query()->where(...)->search();
 - UpdateByQuery
 
 ```php
-use App\Elasticsearch\Test;
+use App\Indices\Test;
 
 Test::query()->where(...)->script(['source' => 'ctx.source.xxx = value'])->updateByQuery();
 ```
@@ -53,7 +53,7 @@ Test::query()->where(...)->script(['source' => 'ctx.source.xxx = value'])->updat
 - Count
 
 ```php
-use App\Elasticsearch\Test;
+use App\Indices\Test;
 
 Test::query()->where(...)->count();
 ```
