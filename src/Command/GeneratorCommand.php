@@ -247,7 +247,7 @@ class GeneratorCommand extends BasCommand
     {
         if ($this->getPoolInput()) {
             $stub = str_replace(
-                ['%NAMESPACE%'],
+                ['%POOL%'],
                 [$this->getPoolInput()],
                 $stub
             );
