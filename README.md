@@ -25,7 +25,6 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 - Create
 
 ```php
-<?php
 namespace App\Indices;
 
 use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
@@ -58,6 +57,45 @@ Test::query()->where(...)->script(['source' => 'ctx.source.xxx = value'])->updat
 use App\Indices\Test;
 
 Test::query()->where(...)->count();
+```
+
+## Migrate
+
+- Index
+
+```php
+namespace App\Indices;
+
+use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
+use FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble;
+use FriendsOfHyperf\Elasticsearch\Index\Traits\Migrate;
+
+class Test extends AbstractIndex implements MigrateAble 
+{
+    use Migrate;
+
+    protected $index = 'test';
+    protected $type = '_doc';
+    protected $settings = [
+        // your settings
+    ];
+    protected $properties = [
+        // your properties
+    ];
+
+    public function getMigration(): Closure
+    {
+        return function ($index) {
+            // migrate data
+        };
+    }
+}
+```
+
+- Run migrate
+
+```bash
+php bin/hyperf.php elasticsearch:migrate "App\\Indices\\Test"
 ```
 
 ### ClientProxy
