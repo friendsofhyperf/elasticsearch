@@ -153,7 +153,9 @@ class GeneratorCommand extends BasCommand
     {
         $stub = file_get_contents($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceIndex($stub)->replaceClass($stub, $name);
+        return $this->replaceNamespace($stub, $name)
+            ->replaceIndex($stub)
+            ->replaceClass($stub, $name);
     }
 
     protected function replaceIndex(&$stub)
