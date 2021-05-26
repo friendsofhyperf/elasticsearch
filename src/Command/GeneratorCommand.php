@@ -232,7 +232,7 @@ class GeneratorCommand extends BasCommand
      */
     protected function getIndexInput()
     {
-        return trim($this->input->getArgument('name'));
+        return trim($this->input->getArgument('index'));
     }
 
     /**
@@ -243,7 +243,7 @@ class GeneratorCommand extends BasCommand
     protected function getArguments()
     {
         return [
-            ['index', InputArgument::OPTIONAL, 'Which index you want to associated with the Index.'],
+            ['index', InputArgument::REQUIRED, 'Which index you want to associated with the Index.'],
         ];
     }
 
