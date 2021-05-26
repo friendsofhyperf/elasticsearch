@@ -268,7 +268,7 @@ class GeneratorCommand extends BasCommand
      */
     protected function getPoolInput()
     {
-        return trim($this->input->getOption('pool'));
+        return trim($this->input->getOption('pool') ?? '');
     }
 
     /**
