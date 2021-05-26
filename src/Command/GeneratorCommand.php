@@ -155,6 +155,7 @@ class GeneratorCommand extends BasCommand
 
         return $this->replaceNamespace($stub, $name)
             ->replaceIndex($stub)
+            ->replacePool($stub)
             ->replaceClass($stub, $name);
     }
 
@@ -238,6 +239,31 @@ class GeneratorCommand extends BasCommand
     }
 
     /**
+     * @param string $stub
+     * @param string $pool
+     * @return $this
+     */
+    protected function replacePool(&$stub)
+    {
+        $stub = str_replace(
+            ['%NAMESPACE%'],
+            [$this->getPoolInput()],
+            $stub
+        );
+
+        return $this;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @return string
+     */
+    protected function getPoolInput()
+    {
+        return trim($this->input->getArgument('pool'));
+    }
+
+    /**
      * Get the console command arguments.
      *
      * @return array
@@ -259,6 +285,7 @@ class GeneratorCommand extends BasCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Whether force to rewrite.'],
             ['namespace', 'N', InputOption::VALUE_OPTIONAL, 'The namespace for class.', null],
+            ['pool', '', InputOption::VALUE_REQUIRED, 'The pool for index.', 'default'],
             ['prefix', 'P', InputOption::VALUE_REQUIRED, 'The prefix for index.', null],
         ];
     }

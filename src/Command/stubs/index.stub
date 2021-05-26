@@ -8,5 +8,6 @@ use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
 
 class %CLASS% extends AbstractIndex
 {
+    protected $pool = '%POOL%';
     protected $index = '%INDEX%';
 }
