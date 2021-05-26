@@ -153,19 +153,19 @@ class MigrateCommand extends HyperfCommand
                 'index' => $index,
                 'body' => $settings,
             ]);
-            $this->output->warning('Index ' . $index . ' settings updated.');
+            $this->output->info('Index ' . $index . ' settings updated.');
 
             $this->client->indices()->putMapping([
                 'index' => $index,
                 'type' => $type,
                 'body' => [$type => ['properties' => $properties]],
             ]);
-            $this->output->warning('Index ' . $index . ' mappings updated.');
+            $this->output->info('Index ' . $index . ' mappings updated.');
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         } finally {
             $this->client->indices()->open(['index' => $index]);
-            $this->output->warning('Index ' . $index . ' opened.');
+            $this->output->info('Index ' . $index . ' opened.');
         }
     }
 
