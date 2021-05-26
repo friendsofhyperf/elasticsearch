@@ -132,7 +132,7 @@ class MigrateCommand extends HyperfCommand
             $this->output->info('Index ' . $new . ' created.');
 
             $this->client->indices()->putAlias(['index' => $new, 'name' => $index]);
-            $this->output->info('Index ' . $index . ' alias to ' . $index . '.');
+            $this->output->info('Index ' . $new . ' alias to ' . $index . '.');
 
             if (isset($old)) {
                 $this->client->indices()->delete(['index' => $old]);
