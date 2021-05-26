@@ -245,11 +245,19 @@ class GeneratorCommand extends BasCommand
      */
     protected function replacePool(&$stub)
     {
-        $stub = str_replace(
-            ['%NAMESPACE%'],
-            [$this->getPoolInput()],
-            $stub
-        );
+        if ($this->getPoolInput()) {
+            $stub = str_replace(
+                ['%NAMESPACE%'],
+                [$this->getPoolInput()],
+                $stub
+            );
+        } else {
+            $stub = str_replace(
+                "protected \$pool = '%POOL%';\n",
+                '',
+                $stub
+            );
+        }
 
         return $this;
     }
@@ -285,7 +293,7 @@ class GeneratorCommand extends BasCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Whether force to rewrite.'],
             ['namespace', 'N', InputOption::VALUE_OPTIONAL, 'The namespace for class.', null],
-            ['pool', 'p', InputOption::VALUE_OPTIONAL, 'The pool for index.', 'default'],
+            ['pool', 'p', InputOption::VALUE_OPTIONAL, 'The pool for index.', null],
             ['prefix', 'P', InputOption::VALUE_OPTIONAL, 'The prefix for index.', null],
         ];
     }
