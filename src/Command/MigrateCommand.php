@@ -28,23 +28,17 @@ class MigrateCommand extends HyperfCommand
      */
     protected $container;
 
-    protected $signature = 'elasticsearch:migrate {model : Model} {--create : Create new index} {--update : Update a existed index} {--recreate : Create index}';
+    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index}';
 
     /**
      * @var ClientProxy
      */
     protected $client;
 
-    /**
-     * @var ClientFactory
-     */
-    private $clientFactory;
-
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         parent::__construct();
-        $this->clientFactory = $container->get(ClientFactory::class);
     }
 
     public function configure()
@@ -76,22 +70,18 @@ class MigrateCommand extends HyperfCommand
         $settings = $model->getSettings();
         $properties = $model->getProperties();
 
-        $this->client = $this->clientFactory->get($pool);
-
-        if ($this->input->getOption('create')) {
-            $this->create($index, $type, $settings, $properties);
-            return;
-        }
+        $this->client = $this->container->get(ClientFactory::class)->get($pool);
 
         if ($this->input->getOption('recreate')) {
             $this->recreate($index, $type, $settings, $properties);
             return;
         }
-
         if ($this->input->getOption('update')) {
             $this->update($index, $type, $settings, $properties);
             return;
         }
+
+        $this->create($index, $type, $settings, $properties);
     }
 
     protected function create(string $index, string $type, array $settings, array $properties)
