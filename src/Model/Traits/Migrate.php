@@ -41,6 +41,6 @@ trait Migrate
 
     public function getMigration(): ?Closure
     {
-        return function ($index) {};
+        return null;
     }
 }

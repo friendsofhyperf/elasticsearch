@@ -29,7 +29,7 @@ class MigrateCommand extends HyperfCommand
      */
     protected $container;
 
-    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index} {--seed : Rebuild data}';
+    protected $signature = 'elasticsearch:migrate {model : Model} {--update : Update a existed index} {--recreate : Create index}';
 
     /**
      * @var ClientProxy
