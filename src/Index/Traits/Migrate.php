@@ -14,21 +14,6 @@ use Closure;
 
 trait Migrate
 {
-    public function getPool(): string
-    {
-        return $this->pool;
-    }
-
-    public function getIndex(): string
-    {
-        return $this->index;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
     public function getSettings(): array
     {
         return $this->settings ?? [];

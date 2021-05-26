@@ -48,6 +48,11 @@ abstract class AbstractIndex
      */
     protected $query;
 
+    public static function __callStatic($name, $arguments)
+    {
+        return (new static())->{$name}(...$arguments);
+    }
+
     public function __call(string $name, array $arguments)
     {
         if (is_callable([$this->query, $name])) {
@@ -90,5 +95,20 @@ abstract class AbstractIndex
         $this->query = new Builder($this->index);
 
         return $this;
+    }
+
+    public function getPool(): string
+    {
+        return $this->pool;
+    }
+
+    public function getIndex(): string
+    {
+        return $this->index;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 }

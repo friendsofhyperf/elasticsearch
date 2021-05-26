@@ -14,12 +14,6 @@ use Closure;
 
 interface MigrateAble
 {
-    public function getPool(): string;
-
-    public function getIndex(): string;
-
-    public function getType(): string;
-
     public function getSettings(): array;
 
     public function getProperties(): array;
