@@ -74,6 +74,11 @@ abstract class AbstractModel
         }
     }
 
+    public static function query(): self
+    {
+        return (new static())->newQuery();
+    }
+
     public function newQuery(): self
     {
         /** @var ContainerInterface $container */
