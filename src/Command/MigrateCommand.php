@@ -98,7 +98,7 @@ class MigrateCommand extends HyperfCommand
                 'index' => $indexName,
                 'body' => [
                     'settings' => $settings,
-                    'mappings' => [$type => $properties],
+                    'mappings' => [$type => ['properties' => $properties]],
                     'aliases' => [$index => new \stdClass()],
                 ],
             ]);
@@ -123,7 +123,7 @@ class MigrateCommand extends HyperfCommand
                 'index' => $new,
                 'body' => [
                     'settings' => $settings,
-                    'mappings' => [$type => $properties],
+                    'mappings' => [$type => ['properties' => $properties]],
                 ],
             ]);
             $this->output->info('Index ' . $new . ' created.');
@@ -158,7 +158,7 @@ class MigrateCommand extends HyperfCommand
             $this->client->indices()->putMapping([
                 'index' => $index,
                 'type' => $type,
-                'body' => [$type => $properties],
+                'body' => [$type => ['properties' => $properties]],
             ]);
             $this->output->warning('Index ' . $index . ' mappings updated.');
         } catch (Throwable $e) {
