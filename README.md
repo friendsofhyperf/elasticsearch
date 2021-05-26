@@ -35,7 +35,7 @@ class Test extends AbstractIndex
 }
 ```
 
-- Make
+- Create by command
 
 ```bash
 php bin/hyperf.php gen:index test
