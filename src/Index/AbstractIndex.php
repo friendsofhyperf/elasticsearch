@@ -48,11 +48,6 @@ abstract class AbstractIndex
      */
     protected $query;
 
-    public static function __callStatic($name, $arguments)
-    {
-        return (new static())->{$name}(...$arguments);
-    }
-
     public function __call(string $name, array $arguments)
     {
         if (is_callable([$this->query, $name])) {
