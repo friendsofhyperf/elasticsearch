@@ -20,7 +20,7 @@ trait Migrate
     /**
      * @var array
      */
-    protected $mappings = [];
+    protected $properties = [];
 
     public function getPool():string
     {
@@ -42,8 +42,8 @@ trait Migrate
         return $this->settings;
     }
 
-    public function getMappings(): array
+    public function getProperties(): array
     {
-        return $this->mappings;
+        return $this->properties;
     }
 }

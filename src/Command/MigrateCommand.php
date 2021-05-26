@@ -74,29 +74,29 @@ class MigrateCommand extends HyperfCommand
         $index = $model->getIndex();
         $type = $model->getType();
         $settings = $model->getSettings();
-        $mappings = $model->getMappings();
+        $properties = $model->getProperties();
 
         $this->client = $this->clientFactory->get($pool);
 
         if ($this->input->getOption('create')) {
-            $this->create($index, $settings, $mappings);
+            $this->create($index, $type, $settings, $properties);
             return;
         }
 
         if ($this->input->getOption('recreate')) {
-            $this->recreate($index, $settings, $mappings);
+            $this->recreate($index, $type, $settings, $properties);
             return;
         }
 
         if ($this->input->getOption('update')) {
-            $this->update($index, $type, $settings, $mappings);
+            $this->update($index, $type, $settings, $properties);
             return;
         }
 
         $this->output->info('Done!');
     }
 
-    protected function create(string $index, array $settings, array $mappings)
+    protected function create(string $index, string $type, array $settings, array $properties)
     {
         if ($this->client->indices()->exists(['index' => $index])) {
             $this->output->warning($index . ' exists.');
@@ -108,10 +108,8 @@ class MigrateCommand extends HyperfCommand
                 'index' => $index . '_0',
                 'body' => [
                     'settings' => $settings,
-                    'mappings' => $mappings,
-                    'aliases' => [
-                        $index => new \stdClass(),
-                    ],
+                    'mappings' => [$type => $properties],
+                    'aliases' => [$index => new \stdClass()],
                 ],
             ]);
         } catch (Throwable $e) {
@@ -119,7 +117,7 @@ class MigrateCommand extends HyperfCommand
         }
     }
 
-    protected function recreate(string $index, array $settings, array $mappings)
+    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [])
     {
         try {
             $this->client->indices()->close(['index' => $index]);
@@ -132,7 +130,7 @@ class MigrateCommand extends HyperfCommand
                 'index' => $new,
                 'body' => [
                     'settings' => $settings,
-                    'mappings' => $mappings,
+                    'mappings' => [$type => $properties],
                 ],
             ]);
 
@@ -144,7 +142,7 @@ class MigrateCommand extends HyperfCommand
         }
     }
 
-    protected function update(string $index, string $type, array $settings, array $mappings)
+    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [])
     {
         if (! $this->client->indices()->exists(['index' => $index])) {
             $this->output->warning($index . ' not exists.');
@@ -162,7 +160,7 @@ class MigrateCommand extends HyperfCommand
             $this->client->indices()->putMapping([
                 'index' => $index,
                 'type' => $type,
-                'body' => $mappings,
+                'body' => [$type => $properties],
             ]);
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());

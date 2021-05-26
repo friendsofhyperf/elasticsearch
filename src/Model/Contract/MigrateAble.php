@@ -20,5 +20,5 @@ interface MigrateAble
 
     public function getSettings(): array;
 
-    public function getMappings(): array;
+    public function getProperties(): array;
 }
