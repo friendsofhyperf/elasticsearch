@@ -22,7 +22,7 @@ php bin/hyperf.php vendor:publish friendsofhyperf/elasticsearch
 
 ### Index
 
-- Create a Index
+- Create
 
 ```php
 <?php
