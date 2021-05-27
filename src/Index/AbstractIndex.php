@@ -98,17 +98,17 @@ abstract class AbstractIndex
     /**
      * @return string
      */
-    public function getPool()
+    public function getIndex()
     {
-        return $this->pool;
+        return $this->index;
     }
 
     /**
      * @return string
      */
-    public function getIndex()
+    public function getPool()
     {
-        return $this->index;
+        return $this->pool;
     }
 
     /**
