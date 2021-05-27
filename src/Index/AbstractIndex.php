@@ -12,6 +12,7 @@ namespace FriendsOfHyperf\Elasticsearch\Index;
 
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
+use FriendsOfHyperf\Elasticsearch\Index\Traits\Migrateable;
 use FriendsOfHyperf\Elasticsearch\Query\Builder;
 use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerInterface;
@@ -23,6 +24,8 @@ use Psr\Container\ContainerInterface;
  */
 abstract class AbstractIndex
 {
+    use Migrateable;
+
     /**
      * @var string
      */

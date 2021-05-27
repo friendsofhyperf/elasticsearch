@@ -73,13 +73,9 @@ Test::query()->where(...)->count();
 namespace App\Indices;
 
 use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
-use FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble;
-use FriendsOfHyperf\Elasticsearch\Index\Traits\Migrate;
 
-class Test extends AbstractIndex implements MigrateAble 
+class Test extends AbstractIndex
 {
-    use Migrate;
-
     protected $index = 'test';
     protected $type = '_doc';
     protected $settings = [

@@ -14,7 +14,6 @@ use Closure;
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
 use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
-use FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Psr\Container\ContainerInterface;
@@ -60,12 +59,12 @@ class MigrateCommand extends HyperfCommand
 
         $instance = make($indexClass);
 
-        if (! ($instance instanceof MigrateAble)) {
-            $this->output->error($indexClass . ' must be implement by ' . MigrateAble::class);
+        if (! ($instance instanceof AbstractIndex)) {
+            $this->output->error($indexClass . ' must be instanceof ' . AbstractIndex::class);
             return;
         }
 
-        /** @var AbstractIndex|MigrateAble $instance */
+        /** @var AbstractIndex $instance */
         $pool = $instance->getPool();
         $index = $instance->getIndex();
         $type = $instance->getType();

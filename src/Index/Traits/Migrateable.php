@@ -12,8 +12,18 @@ namespace FriendsOfHyperf\Elasticsearch\Index\Traits;
 
 use Closure;
 
-trait Migrate
+trait Migrateable
 {
+    /**
+     * @var array
+     */
+    protected $settings;
+
+    /**
+     * @var array
+     */
+    protected $properties;
+
     public function getSettings(): array
     {
         return $this->settings ?? [];
