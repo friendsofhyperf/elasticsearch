@@ -19,7 +19,6 @@ use Psr\Container\ContainerInterface;
 
 /**
  * @mixin \Elasticsearch\Client
- * @mixin \FriendsOfHyperf\Elasticsearch\Index\Contract\MigrateAble
  * @mixin \FriendsOfHyperf\Elasticsearch\Query\Builder
  */
 abstract class AbstractIndex
