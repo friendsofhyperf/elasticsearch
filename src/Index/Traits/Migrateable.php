@@ -24,14 +24,14 @@ trait Migrateable
      */
     protected $properties;
 
-    public function getSettings(): array
+    public function getSettings()
     {
-        return $this->settings ?? [];
+        return $this->settings;
     }
 
-    public function getProperties(): array
+    public function getProperties()
     {
-        return $this->properties ?? [];
+        return $this->properties;
     }
 
     public function getMigration(): ?Closure
