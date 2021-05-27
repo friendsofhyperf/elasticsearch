@@ -73,12 +73,12 @@ class MigrateCommand extends HyperfCommand
         $migration = $instance->getMigration();
 
         if (! is_array($settings)) {
-            $this->output->error(sprintf('Property %s of %s must be array, % given.', 'settings', $indexClass, gettype($settings)));
+            $this->output->error(sprintf('Property %s of %s must be array, s% given.', 'settings', $indexClass, gettype($settings)));
             return;
         }
 
         if (! is_array($properties)) {
-            $this->output->error(sprintf('Property %s of %s must be array, % given.', 'properties', $indexClass, gettype($properties)));
+            $this->output->error(sprintf('Property %s of %s must be array, s% given.', 'properties', $indexClass, gettype($properties)));
             return;
         }
 
