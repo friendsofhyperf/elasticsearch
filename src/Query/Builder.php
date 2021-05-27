@@ -20,21 +20,21 @@ class Builder
      *
      * @var string
      */
-    public $index;
+    protected $index;
 
     /**
      * 索引Type.
      *
      * @var string
      */
-    public $type;
+    protected $type;
 
     /**
      * 搜寻条件.
      *
      * @var array
      */
-    public $wheres = [
+    protected $wheres = [
         'filter' => [],
         'should' => [],
         'must' => [],
@@ -46,58 +46,58 @@ class Builder
      *
      * @var array
      */
-    public $sort = [];
+    protected $sort = [];
 
     /**
      * 从X条开始查询.
      *
      * @var int
      */
-    public $from;
+    protected $from;
 
     /**
      * 获取数量.
      *
      * @var int
      */
-    public $size;
+    protected $size;
 
     /**
      * 需要查询的字段.
      *
      * @var array
      */
-    public $_source;
+    protected $_source;
 
     /**
      * 聚合查询条件.
      *
      * @var array
      */
-    public $aggs = [];
+    protected $aggs = [];
 
     /**
      * collapse.
      * @var array
      */
-    public $collapse;
+    protected $collapse;
 
     /**
      * highlight.
      * @var array
      */
-    public $highlightFields = [];
+    protected $highlightFields = [];
 
     /**
      * script_fields.
      * @var array
      */
-    public $scriptFields = [];
+    protected $scriptFields = [];
 
     /**
      * @var array
      */
-    public $script;
+    protected $script;
 
     /**
      * 所有的区间查询配置.

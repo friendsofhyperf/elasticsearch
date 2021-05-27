@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace FriendsOfHyperf\Elasticsearch\Command;
 
 use Closure;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
+use Exception;
 use FriendsOfHyperf\Elasticsearch\ClientFactory;
 use FriendsOfHyperf\Elasticsearch\ClientProxy;
 use FriendsOfHyperf\Elasticsearch\Index\AbstractIndex;
@@ -29,7 +31,12 @@ class MigrateCommand extends HyperfCommand
      */
     protected $container;
 
-    protected $signature = 'elasticsearch:migrate {index : Index} {--update : Update a existed index} {--recreate : Create index}';
+    protected $signature = 'elasticsearch:migrate
+        {index : Index name}
+        {--update : Update a existed index}
+        {--recreate : Re-create index}
+        {--migrate : Re-migrate data}
+    ';
 
     /**
      * @var ClientProxy
@@ -70,7 +77,7 @@ class MigrateCommand extends HyperfCommand
         $type = $instance->getType();
         $settings = $instance->getSettings();
         $properties = $instance->getProperties();
-        $migration = $instance->getMigration();
+        $migration = $this->input->getOption('migrate') ? $instance->getMigration() : null;
 
         if (! is_array($settings)) {
             $this->output->error(sprintf('Property %s of %s must be array, s% given.', 'settings', $indexClass, gettype($settings)));
@@ -88,6 +95,7 @@ class MigrateCommand extends HyperfCommand
             $this->recreate($index, $type, $settings, $properties, $migration);
             return;
         }
+
         if ($this->input->getOption('update')) {
             $this->update($index, $type, $settings, $properties, $migration);
             return;
@@ -99,7 +107,7 @@ class MigrateCommand extends HyperfCommand
     protected function create(string $index, string $type, array $settings, array $properties, ?Closure $migration)
     {
         if ($this->client->indices()->exists(['index' => $index])) {
-            $this->output->warning('Index ' . $index . ' exists.');
+            $this->output->warning('Index [' . $index . '] exists.');
             return;
         }
 
@@ -115,11 +123,11 @@ class MigrateCommand extends HyperfCommand
                 ],
             ]);
 
-            $this->output->info('Index ' . $new . ' created.');
+            $this->output->info('Index [' . $new . '] created.');
 
             if ($migration) {
                 $this->output->info('Data loading.');
-                $migration($new);
+                $migration($new, $this->client);
                 $this->output->info('Data loaded.');
             }
         } catch (Throwable $e) {
@@ -130,15 +138,12 @@ class MigrateCommand extends HyperfCommand
     protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
     {
         try {
-            // $this->client->indices()->close(['index' => $index]);
-            // $this->output->warning('Index ' . $index . ' closed.');
-
             if ($this->client->indices()->exists(['index' => $index])) {
                 $info = $this->client->indices()->getAlias(['index' => $index]);
-                $old = array_keys($info)[0];
+                $old = array_keys($info)[0] ?? null;
             }
 
-            $new = $this->getNewIndexName($index);
+            $new = $this->generateNewIndexName($index);
 
             $this->client->indices()->create([
                 'index' => $new,
@@ -147,58 +152,67 @@ class MigrateCommand extends HyperfCommand
                     'mappings' => [$type => ['properties' => $properties]],
                 ],
             ]);
-            $this->output->info('Index ' . $new . ' created.');
+            $this->output->info('Index [' . $new . '] created.');
 
             if ($migration) {
                 $this->output->info('Data loading.');
-                $migration($new);
+                $migration($new, $this->client);
                 $this->output->info('Data loaded.');
             }
 
             $this->client->indices()->putAlias(['index' => $new, 'name' => $index]);
-            $this->output->info('Index ' . $new . ' alias to ' . $index . '.');
+            $this->output->info('Index [' . $new . '] alias to [' . $index . '].');
 
             if (isset($old)) {
                 $this->client->indices()->delete(['index' => $old]);
-                $this->output->warning('Index ' . $old . ' deleted.');
+                $this->output->warning('Index [' . $old . '] deleted.');
             }
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         }
     }
 
+    /**
+     * @throws NoNodesAvailableException
+     * @throws Exception
+     */
     protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
     {
         if (! $this->client->indices()->exists(['index' => $index])) {
-            $this->output->warning($index . ' not exists.');
+            $this->output->warning('Index [' . $index . '] not exists.');
             return;
         }
 
         try {
             $this->client->indices()->close(['index' => $index]);
-            $this->output->warning('Index ' . $index . ' closed.');
+            $this->output->warning('Index [' . $index . '] closed.');
 
             $this->client->indices()->putSettings([
                 'index' => $index,
                 'body' => $settings,
             ]);
-            $this->output->info('Index ' . $index . ' settings updated.');
+            $this->output->info('Index [' . $index . '] settings updated.');
 
             $this->client->indices()->putMapping([
                 'index' => $index,
                 'type' => $type,
                 'body' => [$type => ['properties' => $properties]],
             ]);
-            $this->output->info('Index ' . $index . ' mappings updated.');
+            $this->output->info('Index [' . $index . '] mappings updated.');
         } catch (Throwable $e) {
             $this->output->error($e->getMessage());
         } finally {
             $this->client->indices()->open(['index' => $index]);
-            $this->output->info('Index ' . $index . ' opened.');
+            $this->output->info('Index [' . $index . '] opened.');
         }
     }
 
-    protected function getNewIndexName(string $index)
+    /**
+     * @throws NoNodesAvailableException
+     * @throws Exception
+     * @return string
+     */
+    protected function generateNewIndexName(string $index)
     {
         $i = 0;
 
