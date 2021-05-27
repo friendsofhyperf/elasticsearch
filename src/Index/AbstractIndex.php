@@ -95,17 +95,26 @@ abstract class AbstractIndex
         return $this;
     }
 
-    public function getPool(): string
+    /**
+     * @return string
+     */
+    public function getPool()
     {
         return $this->pool;
     }
 
-    public function getIndex(): string
+    /**
+     * @return string
+     */
+    public function getIndex()
     {
         return $this->index;
     }
 
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return $this->type;
     }
