@@ -97,7 +97,7 @@ class Test extends AbstractIndex
 - Run migrate
 
 ```bash
-php bin/hyperf.php elasticsearch:migrate "App\\Indices\\Test"
+php bin/hyperf.php elasticsearch:migrate "App\\Indices\\Test" [--migrate] [--update] [--recreate]
 ```
 
 ### ClientProxy
