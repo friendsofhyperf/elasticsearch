@@ -18,7 +18,8 @@
         "phpstan/phpstan": "^0.12",
         "hyperf/di": "^2.0",
         "hyperf/utils": "^2.0",
-        "hyperf/command": "^2.1"
+        "hyperf/command": "^2.1",
+        "hyperf/pool": "^2.2"
     },
     "autoload": {
         "psr-4": {
