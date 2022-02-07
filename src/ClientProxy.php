@@ -14,14 +14,8 @@ use Hyperf\Contract\ConfigInterface;
 
 class ClientProxy extends Client
 {
-    /**
-     * @var string
-     */
-    protected $poolName;
-
-    public function __construct(ConfigInterface $config, string $pool)
+    public function __construct(ConfigInterface $config, protected string $poolName)
     {
-        $this->poolName = $pool;
         parent::__construct($config);
     }
 }

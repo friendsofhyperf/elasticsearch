@@ -24,10 +24,7 @@ use Hyperf\Utils\Coroutine;
  */
 class Client
 {
-    /**
-     * @var string
-     */
-    protected $poolName = 'default';
+    protected string $poolName = 'default';
 
     /**
      * @var \Elasticsearch\ClientBuilder

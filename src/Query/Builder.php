@@ -16,13 +16,6 @@ use InvalidArgumentException;
 class Builder
 {
     /**
-     * 索引名.
-     *
-     * @var string
-     */
-    protected $index;
-
-    /**
      * 索引Type.
      *
      * @var string
@@ -111,9 +104,12 @@ class Builder
     /**
      * 实例化一个构建链接.
      */
-    public function __construct(?string $index = '')
-    {
-        $this->index = $index;
+    public function __construct(
+        /*
+         * 索引名.
+         */
+        protected ?string $index = ''
+    ) {
     }
 
     /**
@@ -453,14 +449,13 @@ class Builder
 
     /**
      * match_phrase 查询.
-     * @param array $columns
      * @param mixed $value
      * @param array $options
      * @param string $type
      * @throws InvalidArgumentException
      * @return $this
      */
-    public function whereMultiMatch($columns = [], $value, $options = [], $type = 'filter')
+    public function whereMultiMatch($value, array $columns = [], $options = [], $type = 'filter')
     {
         $columns = (array) $columns;
         $options = (array) $options;
@@ -577,11 +572,10 @@ class Builder
     /**
      * where 条件查询.
      *
-     * @param array|Colsure|string $column
      * @param mixed $operator
      * @param mixed $value
      * @param string $type
-     *
+     * @param array|\Colsure|string $column
      * @return $this
      */
     public function where($column, $operator = null, $value = null, $type = 'filter')
@@ -613,13 +607,11 @@ class Builder
     /**
      * or where 查询(whereShould 别名).
      *
-     * @param array|Closure|string $column
      * @param mixed $operator
      * @param mixed $value
-     *
      * @return $this
      */
-    public function orWhere($column, $operator = null, $value = null)
+    public function orWhere(array|\Closure|string $column, $operator = null, $value = null)
     {
         if (func_num_args() === 2) {
             [$value, $operator] = [$operator, '='];
@@ -695,12 +687,11 @@ class Builder
     /**
      * 将嵌套的查询构建条件加入到查询中.
      *
-     * @param Builder $query
      * @param string $type
      */
     public function addNestedWhereQuery(self $query, $type = 'filter')
     {
-        if ($bool = $query->compileWheres($query)) {
+        if ($bool = $query->compileWheres()) {
             $this->addWhere(
                 ['bool' => $bool],
                 $type
@@ -968,34 +959,14 @@ class Builder
      */
     protected function performWhere($column, $value, $operator, $type = 'filter')
     {
-        switch ($operator) {
-            case '=':
-                return $this->whereTerm($column, $value, $type);
-                break;
-            case '>':
-            case '<':
-            case '>=':
-            case '<=':
-                return $this->whereRange($column, $operator, $value, $type);
-                break;
-            case '!=':
-            case '<>':
-                return $this->whereTerm($column, $value, 'must_not');
-                break;
-            case 'match':
-                return $this->whereMatch($column, $value, $type);
-                break;
-            case 'not match':
-            case 'notmatch':
-                return $this->whereMatch($column, $value, 'must_not');
-                break;
-            case 'like':
-                return $this->whereMatchPhrase($column, $value, $type);
-                break;
-            case 'not like':
-            case 'notlike':
-                return $this->whereMatchPhrase($column, $value, 'must_not');
-            break;
-        }
+        return match ($operator) {
+            '=' => $this->whereTerm($column, $value, $type),
+            '>', '<', '>=', '<=' => $this->whereRange($column, $operator, $value, $type),
+            '!=', '<>' => $this->whereTerm($column, $value, 'must_not'),
+            'match' => $this->whereMatch($column, $value, $type),
+            'not match', 'notmatch' => $this->whereMatch($column, $value, 'must_not'),
+            'like' => $this->whereMatchPhrase($column, $value, $type),
+            'not like', 'notlike' => $this->whereMatchPhrase($column, $value, 'must_not'),
+        };
     }
 }

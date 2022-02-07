@@ -26,12 +26,7 @@ use Throwable;
  */
 class MigrateCommand extends HyperfCommand
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    protected $signature = 'elasticsearch:migrate
+    protected ?string $signature = 'elasticsearch:migrate
         {index : Index name}
         {--update : Update a existed index}
         {--recreate : Re-create index}
@@ -43,9 +38,8 @@ class MigrateCommand extends HyperfCommand
      */
     protected $client;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(protected ContainerInterface $container)
     {
-        $this->container = $container;
         parent::__construct();
     }
 
@@ -92,12 +86,12 @@ class MigrateCommand extends HyperfCommand
         $this->client = $this->container->get(ClientFactory::class)->get($pool);
 
         if ($this->input->getOption('recreate')) {
-            $this->recreate($index, $type, $settings, $properties, $migration);
+            $this->recreate($index, $migration, $type, $settings, $properties);
             return;
         }
 
         if ($this->input->getOption('update')) {
-            $this->update($index, $type, $settings, $properties, $migration);
+            $this->update($index, $migration, $type, $settings, $properties);
             return;
         }
 
@@ -135,7 +129,7 @@ class MigrateCommand extends HyperfCommand
         }
     }
 
-    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
+    protected function recreate(string $index, ?Closure $migration, string $type = '_doc', array $settings = [], array $properties = [])
     {
         try {
             if ($this->client->indices()->exists(['index' => $index])) {
@@ -176,7 +170,7 @@ class MigrateCommand extends HyperfCommand
      * @throws NoNodesAvailableException
      * @throws Exception
      */
-    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
+    protected function update(string $index, ?Closure $migration, string $type = '_doc', array $settings = [], array $properties = [])
     {
         if (! $this->client->indices()->exists(['index' => $index])) {
             $this->output->warning('Index [' . $index . '] not exists.');
