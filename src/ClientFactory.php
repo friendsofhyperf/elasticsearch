@@ -10,9 +10,6 @@ declare(strict_types=1);
  */
 namespace FriendsOfHyperf\Elasticsearch;
 
-use FriendsOfHyperf\Elasticsearch\Exception\InvalidClientProxyException;
-use Hyperf\Contract\ConfigInterface;
-
 class ClientFactory
 {
     /**
