@@ -36,7 +36,6 @@ class Client
 
         $this->clientBuilder = tap(ClientBuilder::create(), function (ClientBuilder $builder) use ($config, $configKey) {
             $poolConfig = (array) $config->get($configKey, []);
-            $hosts = data_get($poolConfig, 'hosts', []);
 
             if (Coroutine::inCoroutine()) {
                 $maxConnections = (int) data_get($poolConfig, 'pool.max_connections');
@@ -54,6 +53,7 @@ class Client
                 $builder->setHandler($handler);
             }
 
+            $hosts = (array) data_get($poolConfig, 'hosts', []);
             $builder->setHosts($hosts);
         });
     }
