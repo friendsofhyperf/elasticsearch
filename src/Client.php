@@ -26,10 +26,7 @@ class Client
 {
     protected string $poolName = 'default';
 
-    /**
-     * @var \Elasticsearch\ClientBuilder
-     */
-    protected $clientBuilder;
+    protected ClientBuilder $clientBuilder;
 
     public function __construct(ConfigInterface $config)
     {
@@ -37,28 +34,28 @@ class Client
             throw new MissingConfigException('Config item ' . $configKey . ' is missing.');
         }
 
-        /** @var array */
-        $poolConfig = $config->get($configKey);
-        $hosts = data_get($poolConfig, 'hosts', []);
-        $builder = ClientBuilder::create();
+        $this->clientBuilder = tap(ClientBuilder::create(), function (ClientBuilder $builder) use ($config, $configKey) {
+            $poolConfig = (array) $config->get($configKey, []);
+            $hosts = data_get($poolConfig, 'hosts', []);
 
-        if (Coroutine::inCoroutine()) {
-            $maxConnections = (int) data_get($poolConfig, 'pool.max_connections');
+            if (Coroutine::inCoroutine()) {
+                $maxConnections = (int) data_get($poolConfig, 'pool.max_connections');
 
-            if ($maxConnections > 0) {
-                $handler = make(PoolHandler::class, [
-                    'option' => [
-                        'max_connections' => (int) $maxConnections,
-                    ],
-                ]);
-            } else {
-                $handler = new CoroutineHandler();
+                if ($maxConnections > 0) {
+                    $handler = make(PoolHandler::class, [
+                        'option' => [
+                            'max_connections' => (int) $maxConnections,
+                        ],
+                    ]);
+                } else {
+                    $handler = new CoroutineHandler();
+                }
+
+                $builder->setHandler($handler);
             }
 
-            $builder->setHandler($handler);
-        }
-
-        $this->clientBuilder = $builder->setHosts($hosts);
+            $builder->setHosts($hosts);
+        });
     }
 
     public function __call($name, $arguments)

@@ -611,7 +611,7 @@ class Builder
      * @param mixed $value
      * @return $this
      */
-    public function orWhere(array|\Closure|string $column, $operator = null, $value = null)
+    public function orWhere(array|Closure|string $column, $operator = null, $value = null)
     {
         if (func_num_args() === 2) {
             [$value, $operator] = [$operator, '='];
