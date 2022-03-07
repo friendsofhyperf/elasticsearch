@@ -47,7 +47,7 @@ class Client
                         ],
                     ]);
                 } else {
-                    $handler = new CoroutineHandler();
+                    $handler = make(CoroutineHandler::class);
                 }
 
                 $builder->setHandler($handler);
