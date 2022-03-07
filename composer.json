@@ -11,14 +11,14 @@
     "require": {
         "php": ">=7.3",
         "elasticsearch/elasticsearch": "^7.12",
-        "hyperf/guzzle": "^2.0"
+        "hyperf/guzzle": "^2.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
         "phpstan/phpstan": "^0.12",
-        "hyperf/di": "^2.0",
-        "hyperf/utils": "^2.0",
-        "hyperf/command": "^2.1",
+        "hyperf/di": "^2.2",
+        "hyperf/utils": "^2.2",
+        "hyperf/command": "^2.2",
         "hyperf/pool": "^2.2"
     },
     "autoload": {

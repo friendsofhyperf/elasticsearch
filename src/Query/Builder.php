@@ -997,5 +997,7 @@ class Builder
                 return $this->whereMatchPhrase($column, $value, 'must_not');
             break;
         }
+
+        return $this;
     }
 }
