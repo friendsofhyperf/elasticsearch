@@ -135,7 +135,7 @@ class MigrateCommand extends HyperfCommand
         }
     }
 
-    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
+    protected function recreate(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration = null)
     {
         try {
             if ($this->client->indices()->exists(['index' => $index])) {
@@ -176,7 +176,7 @@ class MigrateCommand extends HyperfCommand
      * @throws NoNodesAvailableException
      * @throws Exception
      */
-    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration)
+    protected function update(string $index, string $type = '_doc', array $settings = [], array $properties = [], ?Closure $migration = null)
     {
         if (! $this->client->indices()->exists(['index' => $index])) {
             $this->output->warning('Index [' . $index . '] not exists.');

@@ -460,7 +460,7 @@ class Builder
      * @throws InvalidArgumentException
      * @return $this
      */
-    public function whereMultiMatch($columns = [], $value, $options = [], $type = 'filter')
+    public function whereMultiMatch($columns = [], $value = null, $options = [], $type = 'filter')
     {
         $columns = (array) $columns;
         $options = (array) $options;
